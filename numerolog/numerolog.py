@@ -1,4 +1,4 @@
-﻿
+﻿# Импортируем необходимые модули для создания графического интерфейса
 import tkinter as tk
 from tkinter import Toplevel, messagebox
 from datetime import datetime
@@ -11,7 +11,9 @@ from tkinter import messagebox, filedialog
 from http import server
 import encodings
 from genericpath import isfile
+# Переменная для хранения результатов
 results = ""
+# Функция для расчета рабочих чисел по методу Пифагора
 def calculate_pythagorean_numbers(day, month, year):
     sum_day_month = sum(map(int, str(day))) + sum(map(int, str(month)))
     sum_year = sum(map(int, str(year)))
@@ -24,6 +26,7 @@ def calculate_pythagorean_numbers(day, month, year):
     third_working_number = first_working_number - (2 * day_first_digit)
     fourth_working_number = sum(map(int, str(third_working_number)))
     return first_working_number, second_working_number, third_working_number, fourth_working_number
+# Функция для получения даты из ввода и отображения результатов
 def calculate_and_show():
     global results
     date_str=entry_date.get()
@@ -38,6 +41,7 @@ def calculate_and_show():
         messagebox.showinfo("Результаты", results)
     except ValueError:
         messagebox.showerror("Ошибка", "Некорректный формат даты. Используйте ДД.ММ.ГГГГ")
+# Функция для открытия окна отправки результатов на почту
 def open_email_window():
     global results
     if not results:
@@ -58,6 +62,7 @@ def open_email_window():
     email_entry.pack(pady=10)
     send_button = tk.Button(email_window, text="Отправить", command=lambda: saada_k(email_entry.get()), bg='#8c92ac', fg='white')
     send_button.pack(pady=20)
+# Повторная функция для открытия окна отправки результатов на почту
 def open_email_window():
     if not results:
         messagebox.showerror("Ошибка", "Сначала рассчитайте результаты.")
@@ -70,6 +75,7 @@ def open_email_window():
     email_window.title("Отправить результаты на почту")
     email_window.geometry("300x200")
     email_window.configure(bg='#8c92ac')
+# Функция для отправки результатов на почту
 def saada_k(receiver_email, message_content):
     smtp_server = "smtp.gmail.com"
     port = 587 
@@ -91,7 +97,7 @@ def saada_k(receiver_email, message_content):
             messagebox.showinfo("Успех", "Результаты успешно отправлены.")
     except Exception as e:
         messagebox.showerror("Ошибка отправки", str(e))
-
+# Функция для расчета и отображения результатов
 def calculate_and_show():
     global results
     date_str = entry_date.get()
@@ -100,7 +106,7 @@ def calculate_and_show():
         calculate_and_show_save()
     except ValueError:
         messagebox.showerror("Ошибка", "Некорректный формат даты. Используйте ДД.ММ.ГГГГ")
-
+# Функция для расчета и отображения результатов с сохранением в файл
 def calculate_and_show_save():
     global results
     date_str = entry_date.get()
@@ -122,12 +128,12 @@ def calculate_and_show_save():
     except ValueError as e:
         print("Ошибка:", e)
 
-
+# Создаем главное окно приложения
 root = tk.Tk()
 root.title("Расчет по методу Пифагора")
 root.geometry("300x600")
 root.configure(bg='pink')
-
+# Создаем элементы интерфейса
 tk.Label(root, text="Введите дату рождения (ДД.ММ.ГГГГ):", bg='pink', fg='black').pack(pady=(20, 0))
 entry_date = tk.Entry(root)
 entry_date.pack(pady=(0, 20))
@@ -138,4 +144,5 @@ calculate_button.pack(pady=(20, 20))
 email_button = tk.Button(root, text="Отправить результат", command=open_email_window, bg='red', fg='white')
 email_button.pack(pady=(0, 20))
 
+# Запускаем главное окно приложения
 root.mainloop()
