@@ -6,7 +6,12 @@ import amamam
 import email
 import smtplib, ssl
 from email.message import EmailMessage
-
+from tkinter import filedialog
+from tkinter import messagebox, filedialog
+from http import server
+import encodings
+from genericpath import isfile
+results = ""
 def calculate_pythagorean_numbers(day, month, year):
     sum_day_month = sum(map(int, str(day))) + sum(map(int, str(month)))
     sum_year = sum(map(int, str(year)))
@@ -19,7 +24,20 @@ def calculate_pythagorean_numbers(day, month, year):
     third_working_number = first_working_number - (2 * day_first_digit)
     fourth_working_number = sum(map(int, str(third_working_number)))
     return first_working_number, second_working_number, third_working_number, fourth_working_number
-
+def calculate_and_show():
+    global results
+    date_str=entry_date.get()
+    try:
+        birth_date = datetime.strptime(date_str, "%d.%m.%Y")
+        day, month, year = birth_date.day, birth_date.month, birth_date.year
+        first, second, third, fourth = calculate_pythagorean_numbers(day, month, year)
+        
+        results = f"1-е рабочее число: {first}\n2-е рабочее число: {second}\n"\
+                  f"3-е рабочее число: {third}\n4-е рабочее число: {fourth}"
+                  
+        messagebox.showinfo("Результаты", results)
+    except ValueError:
+        messagebox.showerror("Ошибка", "Некорректный формат даты. Используйте ДД.ММ.ГГГГ")
 def open_email_window():
     global results
     if not results:
@@ -31,18 +49,27 @@ def open_email_window():
         saada_k(email, results)
         email_window.destroy()
     
+    email_window =Toplevel
+    email_window.title("Отправить результаты на почту")
+    email_window.geometry("300x200")
+    email_window.configure(bg='#8c92ac')
+    tk.Label(email_window, text="Введите адрес электронной почты:", bg='#8c92ac', fg='white').pack(pady=10)
+    email_entry = tk.Entry(email_window)
+    email_entry.pack(pady=10)
+    send_button = tk.Button(email_window, text="Отправить", command=lambda: saada_k(email_entry.get()), bg='#8c92ac', fg='white')
+    send_button.pack(pady=20)
+def open_email_window():
+    if not results:
+        messagebox.showerror("Ошибка", "Сначала рассчитайте результаты.")
+        return
+    def send_email():
+        email = email_entry.get()
+        saada_k(email, results)
+        email_window.destroy()
     email_window = tk.Toplevel(root)
     email_window.title("Отправить результаты на почту")
     email_window.geometry("300x200")
-    email_window.configure(bg='pink')
-    
-    tk.Label(email_window, text="Введите адрес электронной почты:", bg='pink', fg='black').pack(pady=10)
-    email_entry = tk.Entry(email_window)
-    email_entry.pack(pady=10)
-    
-    send_button = tk.Button(email_window, text="Отправить", command=send_email, bg='red', fg='black')
-    send_button.pack(pady=20)
-
+    email_window.configure(bg='#8c92ac')
 def saada_k(receiver_email, message_content):
     smtp_server = "smtp.gmail.com"
     port = 587 
